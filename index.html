@@ -431,11 +431,18 @@
 </head>
 <body>
     <div id="loader">
-        <video id="logoVideo" autoplay muted>
-          <source src="logo/logoCarga.mp4" type="video/mp4" />
-          Tu navegador no soporta videos HTML5.
-        </video>
+          <video
+            id="logoVideo"
+            autoplay
+            muted
+            playsinline
+            preload="auto"
+          >
+            <source src="logo/logoCarga.mp4" type="video/mp4" />
+            Tu navegador no soporta videos HTML5.
+          </video>
     </div>
+
       
     <div id="contenido" style="display:none;">
         <header>
