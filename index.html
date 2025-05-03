@@ -1,0 +1,962 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>noia - no pressure, just words.</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.7.0/css/all.css" crossorigin="anonymous">
+    <link rel="icon" href="logo/favicon.png" type="image/png" />
+    <link href="https://db.onlinewebfonts.com/c/2d57f676e3d6955778fb8acac0176b9a?family=Eina01-Bold" rel="stylesheet">
+    <link href="https://db.onlinewebfonts.com/c/1868e326d3ee28e5395f6efa2bc037bf?family=Eina01-Regular" rel="stylesheet">
+    <style>
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            border-bottom: 1px solid black;
+            padding: 10px 0;
+            text-align: center;
+            z-index: 1000;
+        }
+
+
+        header img {
+            max-height: 50px; /* Ajusta el tamaño del logo si es necesario */
+        }
+
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #3c193c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        #loader video {
+            max-width: 80%;
+            max-height: 80%;
+        }
+
+        #botonFijo {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: black;
+            color: white;
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        #botonFijo:hover {
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+        }
+
+        .mural {
+            column-count: 2;
+            column-gap: 15px;
+            margin-bottom: 50px;
+            margin-top: 75px;
+        }
+
+        .card {
+            font-family: "Eina01-Bold";
+            background: black;
+            color: white;
+            display: inline-block; /* necesario para column-count */
+            width: 100%;
+            margin: 0 0 15px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            word-break: break-word;
+            border: 1px solid white;
+        }
+
+        .card pre {
+            white-space: pre-wrap; /* respeta saltos de línea y ajusta el texto */
+            word-wrap: break-word;
+            margin: 0;
+            font-family: inherit; /* mantiene la misma fuente que el resto */
+        }
+
+        .modal-menu {
+            position: fixed;
+            bottom: 70px; /* justo encima del botón */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 33.33%;
+            display: none; /* oculto por defecto */
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            background-color: white;
+            border: 1px solid black;
+            padding: 15px 0;
+            box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+            z-index: 1001;
+            border-radius: 10px;
+        }
+
+        .modal-btn {
+            font-family: "Eina01-Bold";
+            background: black;
+            color: white;
+            border: 2px solid white;
+            padding: 10px 20px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .modal-btn:hover {
+            background: white;
+            color: black;
+            border: 2px solid black;
+        }
+
+        .customize-modal {
+            font-family: "Eina01-Bold";
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 1px solid black;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 1100;
+            display: none;
+            text-align: center;
+        }
+
+        .customize-modal input[type="color"] {
+            width: 100px;
+            height: 50px;
+            border: none;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .customize-modal button {
+            font-family: "Eina01-Bold";
+            padding: 8px 16px;
+            background: black;
+            color: white;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .customize-modal button:hover {
+            background: white;
+            color: black;
+            border: 1px solid black;
+        }
+
+        main {
+            margin: 20px auto;
+            padding: 10px;
+            text-align: justify;
+            width: 90%;
+        }
+
+        .card img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px; /* opcional, para que encaje con el estilo de la card */
+            display: block;
+        }
+
+        .modal-overlay {
+            font-family: "Eina01-Bold";
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1002;
+        }
+
+        .modal-overlay button {
+            font-family: "Eina01-Bold";
+            padding: 8px 16px;
+            background: black;
+            color: white;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal-overlay button:hover {
+            background: white;
+            color: black;
+            border: 1px solid black;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            height: 75%;
+            max-width: 400px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        #noteText {
+            font-family: "Eina01-Regular";
+            width: 100%;
+            height: 70%;
+            box-sizing: border-box;
+            resize: none;
+            border: 1px solid black;
+            overflow-y: auto;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: space-between;
+            margin: 10px 0;
+            align-items: center;
+        }
+
+        .toolbar a {
+            background: none;
+            color: gray;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .toolbar a:hover,
+        .toolbar a.active {
+            color: black;
+        }
+
+        .toolbar span {
+            color: black;
+        }
+
+        .italic {
+            font-style: italic;
+        }
+
+        .color-options {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .highlight-color {
+            width: 30px;
+            height: 30px;
+            border: 1px solid black;
+            cursor: pointer;
+        }
+
+        #resetHighlight {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #resetHighlight i {
+            margin-right: 5px;
+        }
+
+        .note-area.empty::before {
+            content: attr(data-placeholder);
+            color: #aaa;
+            pointer-events: none;
+        }
+
+        .explorer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .explorer-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .note-file, .note-folder {
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            background-color: #fdfdfd;
+            border-radius: 6px;
+            font-size: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: grab;
+        }
+
+        .note-folder {
+            background-color: #e5ecff;
+        }
+
+        .folder-title {
+            border: none;
+            background: transparent;
+            font-size: 15px;
+            font-weight: bold;
+            width: 100%;
+            outline: none;
+        }
+
+        .note-folder {
+        justify-content: space-between;
+        }
+
+        .note-folder .folder-title {
+        flex: 1;
+        }
+
+        .note-folder div {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        }
+
+
+
+        .folder-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        }
+
+        .folder-modal-content {
+        background: white;
+        padding: 20px;
+        width: 80%;
+        max-height: 90%;
+        overflow-y: auto;
+        border-radius: 10px;
+        position: relative;
+        }
+
+        .close-folder-modal {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 24px;
+        cursor: pointer;
+        }
+
+        .folder-notes-container {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        }
+
+
+
+
+
+
+
+
+
+        @media (max-width: 724px) {
+            .modal-menu {
+                width: 90%;
+            }
+        }
+
+        @media (min-width: 724px) {
+            /* PC */
+            main {
+                width: 50%;
+            }
+
+            .modal-menu {
+                width: 50%;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            /* PC */
+            main {
+                width: 33.33%;
+            }
+
+            .modal-menu {
+                width: 33.33%;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="loader">
+        <video id="logoVideo" autoplay muted>
+          <source src="logo/logoCarga.mp4" type="video/mp4" />
+          Tu navegador no soporta videos HTML5.
+        </video>
+    </div>
+      
+    <div id="contenido" style="display:none;">
+        <header>
+            <a href="#">
+                <img src="logo/noiaBlackk.png" alt="Logo">
+            </a>              
+        </header>
+
+        <main>
+            <div class="mural">
+                <section class="card">
+                    <pre>
+Cosas que odio:
+1. Despertarme.
+2. Despertarme.
+3. Despertarme.
+                    </pre>
+                </section>
+                <section class="card">
+                    <pre>
+Estoy bien. (mentira)
+                    </pre>
+                </section>
+                <section class="card">
+                    <pre>
+el problema de pensar mucho es ue no hay botón de apagar.
+                    </pre>
+                </section>
+                <section class="card">
+                    <pre>
+Mi sueño más húmedo es tener adobe premium
+                    </pre>
+                </section>
+                <section class="card">
+                    <pre>
+Hoy fue uno de esos días en los que me costó existir
+                    </pre>
+                </section>
+                <section class="card">
+                    <pre>
+hoy el aire huele como cuando me iba de excursión en 2º de primaria
+                    </pre>
+                </section>
+                <section class="card">
+                    <pre>
+me da más miedo que me entiendas a que me ignoren.
+                    </pre>
+                </section>
+                <section class="card">
+                    <pre>
+He hecho más scroll que pasos hoy
+                    </pre>
+                </section>
+                <section class="card">
+                    <pre>
+Mi dieta consiste en dos cosas:
+1. Expectativas rotas.
+2. Café.
+                    </pre>
+                </section>
+                <section class="card">
+                    <pre>
+todavía espero tu respuesta a ese mensaje desde el 2021
+                    </pre>
+                </section>
+                <section class="card">
+                    <pre>
+no me acuerdo de como escribes
+no sé si sigues juntando tus tés y tus as
+no sé si ahora tus palabras se inclinan delante o atrás
+no sé si tus mayúsculas siguen siendo las mismas (que aprendemos en preescolar)
+                    </pre>
+                </section>
+                <section class="card">
+                    <pre>
+chucas
+                    </pre>
+                </section>
+                <section class="card">
+                    <pre>
+Cosas que me hacen feliz:
+Pan crujiente
+que huela a lluvia
+Que alguien me escuche de verdad
+                    </pre>
+                </section>
+                <section class="card">
+                    <pre>
+¿Sabes? a veces pienso que ya he sentido lo que voy a sentir jamás. Y que ahora en adelante, no voy a sentir nada nuevo. Solo versiones peores de los que ya he sentido.
+
+Her (2013)
+                    </pre>
+                </section>
+                <section class="card">
+                    <pre>
+Nunca preguntes
+- a una mujer su edad
+- a un hombre su salario
+- a una chica por qué tiene letterboxd
+                    </pre>
+                </section>
+                <!-- Notas generadas en local -->
+            </div>
+        </main>
+
+        <button id="botonFijo"><i class="fa-solid fa-user"></i></button>
+
+        <div id="modalMenu" class="modal-menu">
+            <button class="modal-btn"><i class="fa-solid fa-pen-to-square"></i> Añadir nota</button>
+            <button class="modal-btn"><i class="fa-solid fa-eye"></i> Ver mis notas</button>
+            <button class="modal-btn"><i class="fa-solid fa-palette"></i> Personalizar tablero</button>
+        </div>
+
+        <div id="customizeModal" class="customize-modal">
+            <h3>Selecciona un color de fondo</h3>
+            <input type="color" id="colorPicker">
+            <br>
+            <button id="applyColor">Aplicar</button>
+            <button id="cancelColor">Cancelar</button>
+        </div>
+
+        <div id="addNoteModal" class="modal-overlay">
+            <div class="modal-content">
+                <h2><i class="fa-solid fa-pen-to-square"></i> Añade una nota</h2>
+                <div class="toolbar">
+                    <a id="toggleBold"><i class="fa-solid fa-bold"></i></a>
+                    <a id="toggleItalic"><i class="fa-solid fa-italic"></i></a>
+                    <a id="toggleUnderline"><i class="fa-solid fa-underline"></i></a>
+                    <a id="toggleHighlighter"><i class="fa-solid fa-highlighter"></i></a>
+                    <span>|</span>
+                    <div id="textAlignControls">
+                        <a class="align-option"><i class="fa-solid fa-align-left"></i></a>
+                        <a class="align-option" style="display: none;"><i class="fa-solid fa-align-center"></i></a>
+                        <a class="align-option" style="display: none;"><i class="fa-solid fa-align-right"></i></a>
+                        <a class="align-option" style="display: none;"><i class="fa-solid fa-align-justify"></i></a>
+                    </div>                                          
+                    <span>|</span>
+                    <a><i class="fa-solid fa-text-height"></i></a>
+                    <span>|</span>
+                    <a><i class="fa-solid fa-list"></i></a>
+                    <span>|</span>
+                    <a><i class="fa-solid fa-image"></i></a>
+                    <span>|</span>
+                    <a><i class="fa-solid fa-pen-fancy"></i></a>
+                </div>
+                <div id="noteText" contenteditable="true" class="note-area" data-placeholder=" no pressure, just words... "></div>
+                <div style="margin-top: 10px;">
+                    <button id="saveNote">Guardar</button>
+                    <button id="cancelNote">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="highlightModal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+              <h3>Elige un color de marcador</h3>
+              <div class="color-options">
+                <button class="highlight-color" data-color="yellow" style="background: yellow;"></button>
+                <button class="highlight-color" data-color="lightblue" style="background: lightblue;"></button>
+                <button class="highlight-color" data-color="pink" style="background: pink;"></button>
+                <button class="highlight-color" data-color="lightgreen" style="background: lightgreen;"></button>
+                <button id="resetHighlight" style="background: gray; color: white;">
+                    <i class="fa-solid fa-ban"></i>
+                </button>                
+              </div>
+            </div>
+        </div>
+
+        <div id="viewNotesModal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+              <h2><i class="fa-solid fa-eye"></i> Tus notas</h2>
+                <div>
+                    <button id="createFolderBtn">📁 Nueva carpeta</button>
+                    <button onclick="document.getElementById('viewNotesModal').style.display='none'">Cerrar</button>
+                </div>
+                <div id="noteExplorer" class="explorer-list"></div>
+            </div>
+        </div>
+
+        <div id="folderModal" class="folder-modal" style="display: none;">
+            <div class="folder-modal-content">
+              <span id="closeFolderModal" class="close-folder-modal">&times;</span>
+              <h2 id="folderTitle"></h2>
+              <div id="folderNotes" class="folder-notes-container"></div>
+            </div>
+        </div>          
+          
+          
+          
+    </div>
+      
+</body>
+</html>
+
+<script>
+    const video = document.getElementById('logoVideo');
+
+    video.onended = () => {
+      document.getElementById('loader').style.display = 'none';
+      document.getElementById('contenido').style.display = 'block';
+    };
+
+    const btn = document.getElementById('botonFijo');
+    const modal = document.getElementById('modalMenu');
+
+    btn.addEventListener('click', () => {
+        modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    window.addEventListener('click', (e) => {
+        if (!modal.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
+        modal.style.display = 'none';
+        }
+    });
+
+    const personalizeBtn = document.querySelector('.modal-btn:nth-child(3)');
+    const customizeModal = document.getElementById('customizeModal');
+    const applyColorBtn = document.getElementById('applyColor');
+    const colorPicker = document.getElementById('colorPicker');
+
+    personalizeBtn.addEventListener('click', () => {
+        customizeModal.style.display = 'block';
+    });
+
+    applyColorBtn.addEventListener('click', () => {
+        document.body.style.backgroundColor = colorPicker.value;
+        customizeModal.style.display = 'none'; 
+    });
+
+    const cancelColorBtn = document.getElementById('cancelColor');
+
+    cancelColorBtn.addEventListener('click', () => {
+        customizeModal.style.display = 'none';
+    });
+
+    function isLightColor(hexColor) {
+        hexColor = hexColor.replace('#', '');
+
+        const r = parseInt(hexColor.substr(0, 2), 16);
+        const g = parseInt(hexColor.substr(2, 2), 16);
+        const b = parseInt(hexColor.substr(4, 2), 16);
+
+        const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+
+        return luminance > 186;
+    }
+
+    function ajustarEstiloCards(colorHex) {
+        const cards = document.querySelectorAll('.card');
+
+        if (isLightColor(colorHex)) {
+            cards.forEach(card => {
+            card.style.backgroundColor = 'black';
+            card.style.color = 'white';
+            card.style.border = '1px solid white';
+            });
+        } else {
+            cards.forEach(card => {
+            card.style.backgroundColor = 'white';
+            card.style.color = 'black';
+            card.style.border = '1px solid black';
+            });
+        }
+    }
+
+    applyColorBtn.addEventListener('click', () => {
+        const color = colorPicker.value;
+        document.body.style.backgroundColor = color;
+        localStorage.setItem('bgColor', color);
+        customizeModal.style.display = 'none';
+
+        ajustarEstiloCards(color);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedColor = localStorage.getItem('bgColor');
+        if (savedColor) {
+            document.body.style.backgroundColor = savedColor;
+            ajustarEstiloCards(savedColor);
+        }
+    });
+
+    const addNoteBtn = document.querySelector('.modal-btn:nth-child(1)');
+    const addNoteModal = document.getElementById('addNoteModal');
+    const cancelNoteBtn = document.getElementById('cancelNote');
+
+    addNoteBtn.addEventListener('click', () => {
+        addNoteModal.style.display = 'flex';
+    });
+
+    cancelNoteBtn.addEventListener('click', () => {
+        addNoteModal.style.display = 'none';
+    });
+
+    const alignments = ['left', 'center', 'right', 'justify'];
+        let currentIndex = 0;
+        const alignBtns = document.querySelectorAll('.align-option');
+        const textarea = document.getElementById('noteText');
+
+        // Inicial
+        textarea.style.textAlign = alignments[currentIndex];
+
+        document.getElementById('textAlignControls').addEventListener('click', () => {
+        // Oculta todos
+        alignBtns[currentIndex].style.display = 'none';
+
+        // Avanza índice
+        currentIndex = (currentIndex + 1) % alignments.length;
+
+        // Muestra el siguiente
+        alignBtns[currentIndex].style.display = 'inline-block';
+
+        // Cambia el estilo del textarea
+        textarea.style.textAlign = alignments[currentIndex];
+    });
+
+    const toggleBoldBtn = document.getElementById('toggleBold');
+    const noteText = document.getElementById('noteText');
+
+    toggleBoldBtn.addEventListener('click', () => {
+        const currentFont = window.getComputedStyle(noteText).fontFamily;
+
+        if (currentFont.includes('Eina01-Bold')) {
+            noteText.style.fontFamily = 'Eina01-Regular';
+            toggleBoldBtn.classList.remove('active');
+        } else {
+            noteText.style.fontFamily = 'Eina01-Bold';
+            toggleBoldBtn.classList.add('active');
+        }
+    });
+
+    const toggleItalicBtn = document.getElementById('toggleItalic');
+
+    toggleItalicBtn.addEventListener('click', () => {
+        const isActive = noteText.classList.toggle('italic');
+        if (isActive) {
+            toggleItalicBtn.classList.add('active');
+        } else {
+            toggleItalicBtn.classList.remove('active');
+        }
+    });
+
+    const toggleUnderlineBtn = document.getElementById('toggleUnderline');
+
+    toggleUnderlineBtn.addEventListener('click', () => {
+        const isUnderlined = noteText.style.textDecoration === 'underline';
+
+        if (isUnderlined) {
+            noteText.style.textDecoration = 'none';
+            toggleUnderlineBtn.classList.remove('active');
+        } else {
+            noteText.style.textDecoration = 'underline';
+            toggleUnderlineBtn.classList.add('active');
+        }
+    });
+
+    const toggleHighlighter = document.getElementById('toggleHighlighter');
+    const highlightModal = document.getElementById('highlightModal');
+    const highlightButtons = document.querySelectorAll('.highlight-color');
+
+    toggleHighlighter.addEventListener('click', () => {
+    highlightModal.style.display = 'flex';
+    });
+
+    highlightButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const color = btn.dataset.color;
+        noteText.style.backgroundColor = color;
+        highlightModal.style.display = 'none';
+        toggleHighlighter.classList.add('active');
+    });
+    });
+
+    const resetHighlight = document.getElementById('resetHighlight');
+
+    resetHighlight.addEventListener('click', () => {
+        noteText.style.backgroundColor = '';
+        toggleHighlighter.classList.remove('active');
+        highlightModal.style.display = 'none';
+    });
+
+    function updatePlaceholderVisibility() {
+        const text = noteText.textContent.trim();
+        if (text.length === 0) {
+            noteText.classList.add('empty');
+        } else {
+            noteText.classList.remove('empty');
+        }
+    }
+
+    noteText.addEventListener('input', updatePlaceholderVisibility);
+
+    window.addEventListener('DOMContentLoaded', updatePlaceholderVisibility);
+
+
+
+    
+
+
+
+    const viewNotesBtn = document.querySelectorAll('.modal-btn')[1];
+    const viewNotesModal = document.getElementById('viewNotesModal');
+    const explorer = document.getElementById('noteExplorer');
+    const createFolderBtn = document.getElementById('createFolderBtn');
+
+    let noteCounter = 0;
+
+    // Abrir modal
+    viewNotesBtn.addEventListener('click', () => {
+    viewNotesModal.style.display = 'flex';
+    renderNotes(); // Mostrar notas al abrir
+    });
+
+    // Crear carpeta con nombre editable
+    createFolderBtn.addEventListener('click', () => {
+    const folderId = `folder-${Date.now()}`;
+    const folder = document.createElement('div');
+    folder.classList.add('note-folder');
+    folder.id = folderId;
+    folder.dataset.folder = true;
+
+    const input = document.createElement('input');
+    input.className = 'folder-title';
+    input.value = 'Nueva carpeta';
+    input.disabled = true;
+
+    const actions = document.createElement('div');
+    actions.style.display = 'flex';
+    actions.style.gap = '8px';
+
+    // Botón editar
+    const editBtn = document.createElement('a');
+    editBtn.innerHTML = '<i class="fa-solid fa-pencil"></i>';
+    editBtn.style.cursor = 'pointer';
+    editBtn.title = 'Editar nombre';
+    editBtn.addEventListener('click', () => {
+        input.disabled = !input.disabled;
+        if (!input.disabled) input.focus();
+    });
+
+    // Botón eliminar
+    const deleteBtn = document.createElement('a');
+    deleteBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
+    deleteBtn.style.cursor = 'pointer';
+    deleteBtn.title = 'Eliminar carpeta';
+    deleteBtn.addEventListener('click', () => {
+        folder.remove();
+    });
+
+    actions.appendChild(editBtn);
+    actions.appendChild(deleteBtn);
+
+    folder.appendChild(input);
+    folder.appendChild(actions);
+
+// Permitir soltar notas
+folder.addEventListener('dragover', e => e.preventDefault());
+
+folder.addEventListener('drop', e => {
+  const noteId = e.dataTransfer.getData('text/plain');
+  const note = document.getElementById(noteId);
+  if (note && note.classList.contains('note-file')) {
+    folder.appendChild(note);
+  }
+});
+
+    // ✅ Mueve esto fuera del 'drop'
+    folder.addEventListener('click', (e) => {
+    // Evita que al clicar en el lápiz o basura se abra el modal
+    if (e.target.closest('a')) return;
+
+    const folderModal = document.getElementById('folderModal');
+    const folderNotesContainer = document.getElementById('folderNotes');
+    const folderTitle = document.getElementById('folderTitle');
+
+    folderTitle.textContent = folder.querySelector('input').value;
+    folderNotesContainer.innerHTML = '';
+
+    const notesInFolder = folder.querySelectorAll('.note-file');
+    notesInFolder.forEach(note => {
+        const clone = note.cloneNode(true);
+        clone.removeAttribute('draggable');
+        folderNotesContainer.appendChild(clone);
+    });
+
+    folderModal.style.display = 'flex';
+
+
+
+        // Cerrar modal
+        document.getElementById('closeFolderModal').addEventListener('click', () => {
+        document.getElementById('folderModal').style.display = 'none';
+        });
+
+        });
+
+        explorer.appendChild(folder);
+    });
+
+
+
+    // Renderizar notas simuladas
+    function renderNotes() {
+        // Solo si no hay ya notas
+        if (explorer.querySelectorAll('.note-file').length > 0) return;
+
+        for (let i = 1; i <= 3; i++) {
+            const note = document.createElement('div');
+            note.classList.add('note-file');
+            note.textContent = `Nota ${++noteCounter}`;
+            note.id = `note-${noteCounter}`;
+            note.draggable = true;
+
+            note.addEventListener('dragstart', e => {
+            e.dataTransfer.setData('text/plain', note.id);
+            });
+
+            explorer.appendChild(note);
+        }
+    }
+
+</script>
+  
+  
