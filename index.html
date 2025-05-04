@@ -551,9 +551,6 @@ Nunca preguntes
             <h3>Color de cabecera:</h3>
             <input type="color" id="colorPickerHeader">
 
-            <h3>Color de notas:</h3>
-            <input type="color" id="colorPickerNotes">
-
             <h3>Color de fondo:</h3>
             <input type="color" id="colorPickerBackground">
 
@@ -701,22 +698,11 @@ Nunca preguntes
     const applyColorBtn = document.getElementById('applyColor');
 
     const colorPickerHeader = document.getElementById('colorPickerHeader');
-    const colorPickerNotes = document.getElementById('colorPickerNotes');
     const colorPickerBackground = document.getElementById('colorPickerBackground');
 
 
     personalizeBtn.addEventListener('click', () => {
         customizeModal.style.display = 'flex';
-    });
-
-    applyColorBtn.addEventListener('click', () => {
-        document.querySelector('header').style.backgroundColor = colorPickerHeader.value;
-        document.querySelectorAll('.card').forEach(el => {
-            el.style.backgroundColor = colorPickerNotes.value;
-        });
-        document.body.style.backgroundColor = colorPickerBackground.value;
-
-        customizeModal.style.display = 'none'; 
     });
 
     const cancelColorBtn = document.getElementById('cancelColor');
@@ -756,7 +742,6 @@ Nunca preguntes
     applyColorBtn.addEventListener('click', () => {
         const bgColor = colorPickerBackground.value;
         const headerColor = colorPickerHeader.value;
-        const cardColor = colorPickerNotes.value;
 
         // Aplicar colores
         document.body.style.backgroundColor = bgColor;
@@ -793,9 +778,6 @@ Nunca preguntes
                 el.style.backgroundColor = cardColor;
             });
         }
-
-        document.getElementById('colorPickerNotes').value = cardColor;
-        ajustarEstiloCards(cardColor);
     });
 
     function rgbToHex(rgb) {
@@ -811,7 +793,6 @@ Nunca preguntes
     console.log(rgbToHex(bgColor));
     document.getElementById('colorPickerBackground').value = rgbToHex(bgColor);
     document.getElementById('colorPickerHeader').value = rgbToHex(headerColor);
-    document.getElementById('colorPickerNotes').value = '#f05050';
 
 
     document.getElementById('resetColor').addEventListener('click', () => {
