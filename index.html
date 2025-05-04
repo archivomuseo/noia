@@ -6,22 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>noia - no pressure, just words.</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.7.0/css/all.css" crossorigin="anonymous">
-    <link rel="icon" href="logo/favicon.png" type="image/png" />
+    <link rel="icon" href="logo/faviconNoia.png" type="image/png" />
     <link href="https://db.onlinewebfonts.com/c/2d57f676e3d6955778fb8acac0176b9a?family=Eina01-Bold" rel="stylesheet">
     <link href="https://db.onlinewebfonts.com/c/1868e326d3ee28e5395f6efa2bc037bf?family=Eina01-Regular" rel="stylesheet">
     <style>
+        body {
+            background-color: #faf0db;
+        }
+
         header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            background-color: white;
+            background-color: #c493f0;
             border-bottom: 1px solid black;
             padding: 10px 0;
             text-align: center;
             z-index: 1000;
         }
-
 
         header img {
             max-height: 50px; /* Ajusta el tamaño del logo si es necesario */
@@ -33,7 +36,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #3c193c;
+            background: #c493f0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -74,8 +77,8 @@
 
         .card {
             font-family: "Eina01-Bold";
-            background: black;
-            color: white;
+            background-color: white;
+            color: black;
             display: inline-block; /* necesario para column-count */
             width: 100%;
             margin: 0 0 15px;
@@ -84,7 +87,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             box-sizing: border-box;
             word-break: break-word;
-            border: 1px solid white;
+            border: 1px solid black;
             border-radius: 30px;
         }
 
@@ -424,7 +427,7 @@
           playsinline
           preload="auto"
         >
-          <source src="logo/logoCarga.mp4" type="video/mp4" />
+          <source src="logo/cargaNoia.mp4" type="video/mp4" />
           Tu navegador no soporta videos HTML5.
         </video>
     </div>      
@@ -432,7 +435,7 @@
     <div id="contenido" style="display:none;">
         <header>
             <a href="#">
-                <img src="logo/noiaBlackk.png" alt="Logo">
+                <img src="logo/logoNoia.png" alt="Logo" id="logo">
             </a>              
         </header>
 
@@ -795,6 +798,22 @@ Nunca preguntes
         ajustarEstiloCards(cardColor);
     });
 
+    function rgbToHex(rgb) {
+        const result = rgb.match(/\d+/g);
+        if (!result || result.length < 3) return '#ffffff';
+        return "#" + result.slice(0, 3).map(x => parseInt(x).toString(16).padStart(2, '0')).join('');
+    }
+
+
+    const bgColor = getComputedStyle(document.body).backgroundColor;
+    const headerColor = getComputedStyle(document.querySelector('header')).backgroundColor;
+
+    console.log(rgbToHex(bgColor));
+    document.getElementById('colorPickerBackground').value = rgbToHex(bgColor);
+    document.getElementById('colorPickerHeader').value = rgbToHex(headerColor);
+    document.getElementById('colorPickerNotes').value = '#f05050';
+
+
     document.getElementById('resetColor').addEventListener('click', () => {
         // Eliminar del localStorage
         localStorage.removeItem('bgColor');
@@ -947,7 +966,7 @@ Nunca preguntes
 
         // Crear elementos y añadir al DOM
         const section = document.createElement('section');
-        section.className = 'card';
+        section.className = 'card published-note';
 
         const pre = document.createElement('pre');
         pre.textContent = content;
