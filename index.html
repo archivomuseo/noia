@@ -723,12 +723,15 @@ Nunca preguntes
     }
 
     function ajustarEstiloCards(colorHex) {
+        const header = document.querySelector('header');
         const logo = document.getElementById('logo');
 
         if (isLightColor(colorHex)) {
             logo.src = 'logo/noiaBlack.png'; // fondo claro → logo oscuro
+            header.style.borderBottom = '1px solid black';
         } else {
             logo.src = 'logo/logoNoia.png'; // fondo oscuro → logo blanco
+            header.style.borderBottom = '1px solid white';
         }
     }
 
@@ -1135,3 +1138,5 @@ folder.addEventListener('drop', e => {
     }
 
 </script>
+  
+  
