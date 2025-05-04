@@ -53,8 +53,8 @@
             background-color: black;
             color: white;
             border: 2px solid white;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 17px 20px;
+            border-radius: 50%;
             cursor: pointer;
             z-index: 1000;
         }
@@ -85,6 +85,7 @@
             box-sizing: border-box;
             word-break: break-word;
             border: 1px solid white;
+            border-radius: 30px;
         }
 
         .card pre {
@@ -96,7 +97,7 @@
 
         .modal-menu {
             position: fixed;
-            bottom: 70px; /* justo encima del botón */
+            bottom: 80px; /* justo encima del botón */
             left: 50%;
             transform: translateX(-50%);
             width: 33.33%;
@@ -109,7 +110,7 @@
             padding: 15px 0;
             box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
             z-index: 1001;
-            border-radius: 10px;
+            border-radius: 30px;
         }
 
         .modal-btn {
@@ -120,7 +121,7 @@
             padding: 10px 20px;
             width: 90%;
             max-width: 400px;
-            border-radius: 5px;
+            border-radius: 30px;
             font-size: 1rem;
             cursor: pointer;
         }
@@ -133,19 +134,9 @@
 
         .customize-modal {
             font-family: "Eina01-Bold";
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            border: 1px solid black;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             z-index: 1100;
-            display: none;
             text-align: center;
-        }
+        }            
 
         .customize-modal input[type="color"] {
             width: 100px;
@@ -161,7 +152,7 @@
             background: black;
             color: white;
             border: 1px solid white;
-            border-radius: 5px;
+            border-radius: 30px;
             cursor: pointer;
         }
 
@@ -205,7 +196,7 @@
             background: black;
             color: white;
             border: 1px solid white;
-            border-radius: 5px;
+            border-radius: 30px;
             cursor: pointer;
         }
 
@@ -218,11 +209,13 @@
         .modal-content {
             background: white;
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 30px;
             width: 90%;
             height: 75%;
             max-width: 400px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin-right: 10px;
+            margin-left: 10px;
         }
 
         #noteText {
@@ -233,6 +226,7 @@
             resize: none;
             border: 1px solid black;
             overflow-y: auto;
+            border-radius: 10px;
         }
 
         .toolbar {
@@ -390,14 +384,6 @@
         gap: 10px;
         }
 
-
-
-
-
-
-
-
-
         @media (max-width: 724px) {
             .modal-menu {
                 width: 90%;
@@ -431,18 +417,17 @@
 </head>
 <body>
     <div id="loader">
-          <video
-            id="logoVideo"
-            autoplay
-            muted
-            playsinline
-            preload="auto"
-          >
-            <source src="logo/logoCarga.mp4" type="video/mp4" />
-            Tu navegador no soporta videos HTML5.
-          </video>
-    </div>
-
+        <video
+          id="logoVideo"
+          autoplay
+          muted
+          playsinline
+          preload="auto"
+        >
+          <source src="logo/logoCarga.mp4" type="video/mp4" />
+          Tu navegador no soporta videos HTML5.
+        </video>
+    </div>      
       
     <div id="contenido" style="display:none;">
         <header>
@@ -552,16 +537,19 @@ Nunca preguntes
 
         <div id="modalMenu" class="modal-menu">
             <button class="modal-btn"><i class="fa-solid fa-pen-to-square"></i> Añadir nota</button>
-            <button class="modal-btn"><i class="fa-solid fa-eye"></i> Ver mis notas</button>
+            <button class="modal-btn"><i class="fa-solid fa-file"></i> Ver mis notas</button>
             <button class="modal-btn"><i class="fa-solid fa-palette"></i> Personalizar tablero</button>
         </div>
 
-        <div id="customizeModal" class="customize-modal">
+        <div id="customizeModal" class="modal-overlay">
+            <div class="modal-content customize-modal">
             <h3>Selecciona un color de fondo</h3>
             <input type="color" id="colorPicker">
-            <br>
-            <button id="applyColor">Aplicar</button>
-            <button id="cancelColor">Cancelar</button>
+            <div style="margin-top: 10px;">
+                <button id="applyColor"><i class="fa-solid fa-check"></i></button>
+                <button id="cancelColor"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>  
         </div>
 
         <div id="addNoteModal" class="modal-overlay">
@@ -613,9 +601,9 @@ Nunca preguntes
 
         <div id="viewNotesModal" class="modal-overlay" style="display: none;">
             <div class="modal-content">
-              <h2><i class="fa-solid fa-eye"></i> Tus notas</h2>
+              <h2><i class="fa-solid fa-file"></i> Tus notas</h2>
                 <div>
-                    <button id="createFolderBtn">📁 Nueva carpeta</button>
+                    <button id="createFolderBtn"><i class="fa-solid fa-folder-plus"></i> Nueva carpeta</button>
                     <button onclick="document.getElementById('viewNotesModal').style.display='none'">Cerrar</button>
                 </div>
                 <div id="noteExplorer" class="explorer-list"></div>
@@ -664,7 +652,7 @@ Nunca preguntes
     const colorPicker = document.getElementById('colorPicker');
 
     personalizeBtn.addEventListener('click', () => {
-        customizeModal.style.display = 'block';
+        customizeModal.style.display = 'flex';
     });
 
     applyColorBtn.addEventListener('click', () => {
