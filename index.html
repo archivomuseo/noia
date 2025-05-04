@@ -339,49 +339,49 @@
         }
 
         .note-folder div {
-        display: flex;
-        gap: 8px;
-        align-items: center;
+            display: flex;
+            gap: 8px;
+            align-items: center;
         }
 
 
 
         .folder-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.5);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .folder-modal-content {
-        background: white;
-        padding: 20px;
-        width: 80%;
-        max-height: 90%;
-        overflow-y: auto;
-        border-radius: 10px;
-        position: relative;
+            background: white;
+            padding: 20px;
+            width: 80%;
+            max-height: 90%;
+            overflow-y: auto;
+            border-radius: 10px;
+            position: relative;
         }
 
         .close-folder-modal {
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        font-size: 24px;
-        cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
         }
 
         .folder-notes-container {
-        margin-top: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         @media (max-width: 724px) {
@@ -539,15 +539,25 @@ Nunca preguntes
             <button class="modal-btn"><i class="fa-solid fa-pen-to-square"></i> Añadir nota</button>
             <button class="modal-btn"><i class="fa-solid fa-file"></i> Ver mis notas</button>
             <button class="modal-btn"><i class="fa-solid fa-palette"></i> Personalizar tablero</button>
+            <button id="deleteAllNotesBtn" class="modal-btn"><i class="fa-solid fa-trash"></i> Eliminar todas mis notas</button>
         </div>
 
         <div id="customizeModal" class="modal-overlay">
             <div class="modal-content customize-modal">
-            <h3>Selecciona un color de fondo</h3>
-            <input type="color" id="colorPicker">
+            <h2><i class="fa-solid fa-palette"></i> Personalizar tablero</h2>
+            <h3>Color de cabecera:</h3>
+            <input type="color" id="colorPickerHeader">
+
+            <h3>Color de notas:</h3>
+            <input type="color" id="colorPickerNotes">
+
+            <h3>Color de fondo:</h3>
+            <input type="color" id="colorPickerBackground">
+
             <div style="margin-top: 10px;">
                 <button id="applyColor"><i class="fa-solid fa-check"></i></button>
                 <button id="cancelColor"><i class="fa-solid fa-xmark"></i></button>
+                <button id="resetColor"><i class="fa-solid fa-rotate-right"></i></button>
             </div>
         </div>  
         </div>
@@ -577,10 +587,13 @@ Nunca preguntes
                     <a><i class="fa-solid fa-pen-fancy"></i></a>
                 </div>
                 <div id="noteText" contenteditable="true" class="note-area" data-placeholder=" no pressure, just words... "></div>
-                <div style="margin-top: 10px;">
-                    <button id="saveNote">Guardar</button>
-                    <button id="cancelNote">Cancelar</button>
-                </div>
+                <div style="margin-top: 10px; display: flex; justify-content: space-between;">
+                    <div>
+                        <button id="publishNote">Publicar</button>
+                        <button id="saveNote">Guardar</button>
+                    </div>
+                    <button id="cancelNote">Cerrar</button>
+                </div>                
             </div>
         </div>
 
@@ -599,13 +612,47 @@ Nunca preguntes
             </div>
         </div>
 
+        <div id="confirmPublishModal" class="modal-overlay" style="display: none;">
+            <div class="modal-content" style="text-align: center; height: auto;">
+                <h3>¿Segur@ que quieres publicar la nota?</h3>
+                <div style="margin-top: 15px; display: flex; justify-content: space-between;">
+                    <button id="confirmPublishYes">Sí</button>
+                    <button id="confirmPublishNo">No</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="confirmPublishModalAccept" class="modal-overlay" style="display: none;">
+            <div class="modal-content" style="text-align: center; height: auto;">
+                <h3>Tu nota se ha publicado correctamente ;)</h3>
+                <button id="confirmPublishAccept">Aceptar</button>
+            </div>
+        </div>
+
+        <div id="confirmPublishModalRefused" class="modal-overlay" style="display: none;">
+            <div class="modal-content" style="text-align: center; height: auto;">
+                <h3>Se ha cancelado la publicación :(</h3>
+                <button id="confirmPublishRefused">Aceptar</button>
+            </div>
+        </div>
+
+        <div id="confirmDraftAccept" class="modal-overlay" style="display: none;">
+            <div class="modal-content" style="text-align: center; height: auto;">
+                <h3>Tu nota se ha guardado en el borrador ;)</h3>
+                <button id="confirmDraftAccept">Aceptar</button>
+            </div>
+        </div>
+
+        
         <div id="viewNotesModal" class="modal-overlay" style="display: none;">
             <div class="modal-content">
               <h2><i class="fa-solid fa-file"></i> Tus notas</h2>
-                <div>
-                    <button id="createFolderBtn"><i class="fa-solid fa-folder-plus"></i> Nueva carpeta</button>
+                <div style="margin-top: 10px; display: flex; justify-content: space-between;">
+                    <div>
+                        <button id="createFolderBtn"><i class="fa-solid fa-folder-plus"></i> Nueva carpeta</button>
+                    </div>
                     <button onclick="document.getElementById('viewNotesModal').style.display='none'">Cerrar</button>
-                </div>
+                </div>            
                 <div id="noteExplorer" class="explorer-list"></div>
             </div>
         </div>
@@ -649,14 +696,23 @@ Nunca preguntes
     const personalizeBtn = document.querySelector('.modal-btn:nth-child(3)');
     const customizeModal = document.getElementById('customizeModal');
     const applyColorBtn = document.getElementById('applyColor');
-    const colorPicker = document.getElementById('colorPicker');
+
+    const colorPickerHeader = document.getElementById('colorPickerHeader');
+    const colorPickerNotes = document.getElementById('colorPickerNotes');
+    const colorPickerBackground = document.getElementById('colorPickerBackground');
+
 
     personalizeBtn.addEventListener('click', () => {
         customizeModal.style.display = 'flex';
     });
 
     applyColorBtn.addEventListener('click', () => {
-        document.body.style.backgroundColor = colorPicker.value;
+        document.querySelector('header').style.backgroundColor = colorPickerHeader.value;
+        document.querySelectorAll('.card').forEach(el => {
+            el.style.backgroundColor = colorPickerNotes.value;
+        });
+        document.body.style.backgroundColor = colorPickerBackground.value;
+
         customizeModal.style.display = 'none'; 
     });
 
@@ -683,35 +739,76 @@ Nunca preguntes
 
         if (isLightColor(colorHex)) {
             cards.forEach(card => {
-            card.style.backgroundColor = 'black';
-            card.style.color = 'white';
-            card.style.border = '1px solid white';
+            card.style.color = 'black';
+            card.style.border = '1px solid black';
             });
         } else {
             cards.forEach(card => {
-            card.style.backgroundColor = 'white';
-            card.style.color = 'black';
-            card.style.border = '1px solid black';
+            card.style.color = 'white';
+            card.style.border = '1px solid white';
             });
         }
     }
 
     applyColorBtn.addEventListener('click', () => {
-        const color = colorPicker.value;
-        document.body.style.backgroundColor = color;
-        localStorage.setItem('bgColor', color);
+        const bgColor = colorPickerBackground.value;
+        const headerColor = colorPickerHeader.value;
+        const cardColor = colorPickerNotes.value;
+
+        // Aplicar colores
+        document.body.style.backgroundColor = bgColor;
+        document.querySelector('header').style.backgroundColor = headerColor;
+        document.querySelectorAll('.card').forEach(el => {
+            el.style.backgroundColor = cardColor;
+        });
+
+        // Guardar en localStorage
+        localStorage.setItem('bgColor', bgColor);
+        localStorage.setItem('headerColor', headerColor);
+        localStorage.setItem('cardColor', cardColor);
+
         customizeModal.style.display = 'none';
 
-        ajustarEstiloCards(color);
+        ajustarEstiloCards(cardColor);
     });
 
     document.addEventListener('DOMContentLoaded', () => {
-        const savedColor = localStorage.getItem('bgColor');
-        if (savedColor) {
-            document.body.style.backgroundColor = savedColor;
-            ajustarEstiloCards(savedColor);
+        const bgColor = localStorage.getItem('bgColor');
+        const headerColor = localStorage.getItem('headerColor');
+        const cardColor = localStorage.getItem('cardColor');
+
+        if (bgColor) {
+            document.body.style.backgroundColor = bgColor;
+            document.getElementById('colorPickerBackground').value = bgColor;
         }
+        if (headerColor) {
+            document.querySelector('header').style.backgroundColor = headerColor;
+            document.getElementById('colorPickerHeader').value = headerColor;
+        }
+        if (cardColor) {
+            document.querySelectorAll('.card').forEach(el => {
+                el.style.backgroundColor = cardColor;
+            });
+        }
+
+        document.getElementById('colorPickerNotes').value = cardColor;
+        ajustarEstiloCards(cardColor);
     });
+
+    document.getElementById('resetColor').addEventListener('click', () => {
+        // Eliminar del localStorage
+        localStorage.removeItem('bgColor');
+        localStorage.removeItem('headerColor');
+        localStorage.removeItem('cardColor');
+
+        // Restaurar colores por defecto si lo deseas
+        document.body.style.backgroundColor = ''; // valor por defecto del navegador
+        document.querySelector('header').style.backgroundColor = '';
+        document.querySelectorAll('.card').forEach(el => {
+            el.style.backgroundColor = '';
+        });
+    });
+
 
     const addNoteBtn = document.querySelector('.modal-btn:nth-child(1)');
     const addNoteModal = document.getElementById('addNoteModal');
@@ -825,6 +922,112 @@ Nunca preguntes
 
     window.addEventListener('DOMContentLoaded', updatePlaceholderVisibility);
 
+    const publishNoteBtn = document.getElementById('publishNote');
+    const mural = document.querySelector('.mural');
+    const confirmModal = document.getElementById('confirmPublishModal');
+    const confirmYes = document.getElementById('confirmPublishYes');
+    const confirmNo = document.getElementById('confirmPublishNo');
+
+    const saveNoteBtn = document.getElementById('saveNote');
+
+    // Al hacer clic en "Publicar", se abre el modal de confirmación
+    publishNoteBtn.addEventListener('click', () => {
+        const content = noteText.innerText.trim();
+        if (content !== '') {
+            confirmModal.style.display = 'flex';
+        } else {
+            alert('La nota está vacía.');
+        }
+    });
+
+    confirmYes.addEventListener('click', () => {
+        const content = noteText.innerText.trim();
+
+        if (!content) return; // Evita guardar si está vacío
+
+        // Crear elementos y añadir al DOM
+        const section = document.createElement('section');
+        section.className = 'card';
+
+        const pre = document.createElement('pre');
+        pre.textContent = content;
+
+        section.appendChild(pre);
+        mural.appendChild(section);
+
+        // Guardar nota en localStorage
+        const storedNotes = JSON.parse(localStorage.getItem('notasPublicadas')) || [];
+        storedNotes.push(content);
+        localStorage.setItem('notasPublicadas', JSON.stringify(storedNotes));
+
+        // Limpiar y cerrar modales
+        noteText.innerText = '';
+        document.getElementById('addNoteModal').style.display = 'none';
+        confirmModal.style.display = 'none';
+
+        // Mostrar modal de confirmación
+        document.getElementById('confirmPublishModalAccept').style.display = 'flex';
+
+        document.getElementById('confirmPublishAccept').addEventListener('click', () => {
+            document.getElementById('confirmPublishModalAccept').style.display = 'none';
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const storedNotes = JSON.parse(localStorage.getItem('notasPublicadas')) || [];
+        const mural = document.querySelector('.mural');
+
+        storedNotes.forEach(content => {
+            const section = document.createElement('section');
+            section.className = 'card published-note';
+
+            const pre = document.createElement('pre');
+            pre.textContent = content;
+
+            section.appendChild(pre);
+            mural.appendChild(section);
+        });
+    });
+
+
+
+    // Si cancela la publicación
+    confirmNo.addEventListener('click', () => {
+        confirmModal.style.display = 'none';
+
+        // Mostrar modal de confirmación
+        document.getElementById('confirmPublishModalRefused').style.display = 'flex';
+
+        document.getElementById('confirmPublishRefused').addEventListener('click', () => {
+            document.getElementById('confirmPublishModalRefused').style.display = 'none';
+        });
+
+    });
+
+    // Si lo guarda en borradores
+    saveNoteBtn.addEventListener('click', () => {
+        // Mostrar modal de confirmación
+        document.getElementById('confirmDraftAccept').style.display = 'flex';
+
+        document.getElementById('confirmDraftAccept').addEventListener('click', () => {
+            document.getElementById('confirmDraftAccept').style.display = 'none';
+        });
+
+    });
+
+    const deleteAllNotesBtn = document.getElementById('deleteAllNotesBtn');
+
+    deleteAllNotesBtn.addEventListener('click', () => {
+        // Eliminar del localStorage
+        localStorage.removeItem('notasPublicadas');
+
+        // Eliminar solo las notas publicadas (con clase 'published-note')
+        const publishedNotes = document.querySelectorAll('.published-note');
+        publishedNotes.forEach(note => note.remove());
+    });
+
+
+
 
 
     
@@ -929,8 +1132,6 @@ folder.addEventListener('drop', e => {
 
         explorer.appendChild(folder);
     });
-
-
 
     // Renderizar notas simuladas
     function renderNotes() {
